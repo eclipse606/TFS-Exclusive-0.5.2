@@ -2427,6 +2427,12 @@ void LuaInterface::registerFunctions()
 	//doItemEraseAttribute(uid, key)
 	lua_register(m_luaState, "doItemEraseAttribute", LuaInterface::luaDoItemEraseAttribute);
 
+	//doItemSetDuration(uid, duration)
+	lua_register(m_luaState, "doItemSetDuration", LuaInterface::luaDoItemSetDuration);
+
+	//getItemDurationTime(uid)
+	lua_register(m_luaState, "getItemDurationTime", LuaInterface::luaGetItemDurationTime);
+
 	//getItemWeight(uid[, precise = true])
 	lua_register(m_luaState, "getItemWeight", LuaInterface::luaGetItemWeight);
 
@@ -10928,6 +10934,42 @@ int32_t LuaInterface::luaDoItemEraseAttribute(lua_State* L)
 		item->resetActionId();
 
 	lua_pushboolean(L, ret);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoItemSetDuration(lua_State* L)
+{
+	//doItemSetDuration(uid, duration)
+	uint32_t duration = (popNumber(L) * 1000);
+	ScriptEnviroment* env = getEnv();
+
+	Item* item = env->getItemByUID(popNumber(L));
+	if(!item)
+	{
+		errorEx(getError(LUA_ERROR_ITEM_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	item->setDuration(duration);
+	return 1;
+}
+
+int32_t LuaInterface::luaGetItemDurationTime(lua_State* L)
+{
+	//getItemDurationTime(uid)
+	ScriptEnviroment* env = getEnv();
+
+	Item* item = env->getItemByUID(popNumber(L));
+	if(!item)
+	{
+		errorEx(getError(LUA_ERROR_ITEM_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	uint32_t duration = (item->getDuration() / 1000);
+	lua_pushnumber(L, duration);
 	return 1;
 }
 

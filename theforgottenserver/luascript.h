@@ -688,6 +688,8 @@ class LuaInterface
 		static int32_t luaDoUpdateHouseAuctions(lua_State* L);
 		static int32_t luaGetItemIdByName(lua_State* L);
 		static int32_t luaGetItemInfo(lua_State* L);
+		static int32_t luaDoItemSetDuration(lua_State* L);
+		static int32_t luaGetItemDurationTime(lua_State* L);
 		static int32_t luaGetItemWeight(lua_State* L);
 		static int32_t luaGetItemParent(lua_State* L);
 		static int32_t luaGetItemAttribute(lua_State* L);
