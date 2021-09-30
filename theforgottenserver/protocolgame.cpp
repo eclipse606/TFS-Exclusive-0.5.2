@@ -3026,8 +3026,16 @@ void ProtocolGame::AddCreature(OutputMessage_ptr msg, const Creature* creature, 
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
 	msg->addByte(0xA0);
-	msg->add<uint16_t>(player->getHealth());
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
+	if (player->getPlayerInfo(PLAYERINFO_MAXHEALTH) > 0)
+    {
+        msg->add<uint16_t>(uint16_t(player->getHealth() * 100 / player->getPlayerInfo(PLAYERINFO_MAXHEALTH)));
+        msg->add<uint16_t>(100);
+    }
+    else
+    {
+        msg->add<uint16_t>(0);
+        msg->add<uint16_t>(0);  
+    }
 	msg->add<uint32_t>(uint32_t(player->getFreeCapacity() * 100));
 	uint64_t experience = player->getExperience();
 	if(experience > 0x7FFFFFFF)
@@ -3037,8 +3045,16 @@ void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 
 	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MANA));
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAXMANA));
+	if (player->getPlayerInfo(PLAYERINFO_MAXMANA) > 0)
+    {
+        msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MANA) * 100 / player->getPlayerInfo(PLAYERINFO_MAXMANA));
+        msg->add<uint16_t>(100);
+    }
+    else
+    {
+        msg->add<uint16_t>(0);
+        msg->add<uint16_t>(0);
+    }
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
