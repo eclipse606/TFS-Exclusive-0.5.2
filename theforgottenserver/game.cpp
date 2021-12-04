@@ -6727,7 +6727,7 @@ uint32_t Game::getPlayersWithMcLimit()
 				ips[ip] = 1;
 				count++;
 			}
-			else if (ips[ip] < 5)
+			else if (ips[ip] < 4) //preventing ban in otservlist
 			{
 				ips[ip]++;
 				count++;
